@@ -1,0 +1,91 @@
+# The MariaDB configuration file
+#
+# The MariaDB/MySQL tools read configuration files in the following order:
+# 1. "/etc/mysql/mariadb.cnf" (this file) to set global defaults,
+# 2. "/etc/mysql/conf.d/*.cnf" to set global options.
+# 3. "/etc/mysql/mariadb.conf.d/*.cnf" to set MariaDB-only options.
+# 4. "~/.my.cnf" to set user-specific options.
+#
+# If the same option is defined multiple times, the last one will apply.
+#
+# One can use all long options that the program supports.
+# Run program with --help to get a list of available options and with
+# --print-defaults to see which it would actually understand and use.
+
+#
+# This group is read both both by the client and the server
+# use it for options that affect everything
+#
+
+[client]
+host     = localhost
+user     = root
+password =
+socket   = /var/run/mysqld/mysqld.sock
+[mysql_upgrade]
+host     = localhost
+user     = root
+password =
+socket   = /var/run/mysqld/mysqld.sock
+
+[mysqld]
+
+# GENERAL #
+# user                           = mysql
+default-storage-engine         = InnoDB
+# socket                         = /var/lib/mysql/mysql.sock
+# pid-file                       = /var/lib/mysql/mysql.pid
+skip-name-resolve                = 1
+
+# MyISAM #
+key-buffer-size                = 512M
+myisam-recover                 = FORCE,BACKUP
+
+# SAFETY #
+max-allowed-packet             = 512M
+max-connect-errors             = 1000000
+sql-mode                       = STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_AUTO_VALUE_ON_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ONLY_FULL_GROUP_BY
+
+# DATA STORAGE #
+datadir                        = /var/lib/mysql/
+
+# BINARY LOGGING #
+log-bin                        = /var/lib/mysql/mysql-bin
+expire-logs-days               = 14
+sync-binlog                    = 1
+
+# CACHES AND LIMITS #
+tmp-table-size                 = 128M
+max-heap-table-size            = 128M
+query-cache-type               = 1
+query-cache-size               = 80M
+query_cache_limit              = 512K
+query_cache_min_res_unit       = 2k
+max-connections                = 2000
+thread-cache-size              = 100
+open-files-limit               = 65535
+table-definition-cache         = 32768
+table-open-cache               = 32768
+
+# INNODB #
+innodb-flush-method            = O_DIRECT
+innodb-log-files-in-group      = 2
+innodb-log-file-size           = 1G
+innodb-flush-log-at-trx-commit = 1
+innodb-file-per-table          = 1
+innodb-buffer-pool-size        = 4G
+innodb-buffer-pool-instances   = 3
+innodb-large-prefix = true
+innodb-file-per-table = true
+
+# LOGGING #
+log-error                      = /var/lib/mysql/mysql-error.log
+# log-queries-not-using-indexes  = 1
+# slow-query-log                 = 1
+# slow-query-log-file            = /var/lib/mysql/mysql-slow.log
+
+[client-server]
+
+# Import all .cnf files from configuration directory
+!includedir /etc/mysql/conf.d/
+!includedir /etc/mysql/mariadb.conf.d/
